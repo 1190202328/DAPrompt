@@ -205,4 +205,21 @@ if __name__ == "__main__":
         help="modify config options using the command-line",
     )
     args = parser.parse_args()
-    main(args)
+
+    # 是否需要跑所有实验
+    run_all = False
+
+    if run_all:
+        total_domains = ['art', 'clipart', 'product', 'real_world']
+        for i in range(len(total_domains)):
+            target_domain = total_domains[i]
+            for source_domain in total_domains:
+                if source_domain != target_domain:
+                    args.source_domains = [source_domain]
+                    args.target_domains = [target_domain]
+                    split_result = args.output_dir.split('/')
+                    new_output_dir = '/'.join(split_result[:-2]+[f'{source_domain}-{target_domain}']+split_result[-1:])
+                    args.output_dir = new_output_dir
+                    main(args)
+    else:
+        main(args)
